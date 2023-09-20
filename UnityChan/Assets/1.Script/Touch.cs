@@ -70,8 +70,7 @@ public class Touch : MonoBehaviour
                     univoice.clip = voice2;
                     univoice.Play();
                 }
-               
-                    
+                                   
             }
         }
     }
