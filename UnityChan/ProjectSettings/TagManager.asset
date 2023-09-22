@@ -8,6 +8,7 @@ TagManager:
   - Body
   - Whole
   - Start
+  - Arm
   layers:
   - Default
   - TransparentFX

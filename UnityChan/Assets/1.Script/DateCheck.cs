@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class DateCheck : MonoBehaviour
 {
-    System.DateTime now;
-    int nowMonth;
-    int nowDay;
+    public static System.DateTime now;
+    public static int nowMonth;
+    public static int nowDay;
 
     private AudioSource univoice;
     public AudioClip voiceBirthday;
@@ -46,7 +46,8 @@ public class DateCheck : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Date_Check();
+
         //형재 날짜와 시간 얻기
         now = System.DateTime.Now;
         nowMonth = now.Month;
@@ -87,15 +88,15 @@ public class DateCheck : MonoBehaviour
         int oldDay = PlayerPrefs.GetInt("Day");
         Debug.Log("이전 실행일 : " + oldMonth + "월" + oldDay + "일/n"
             + "현재 실행일 : " + nowMonth + "월" + nowDay + "일");
-        
+
         //해당 날짜의 음성이 있으면 재생
-        univoice =GetComponent<AudioSource>();
+        univoice = GetComponent<AudioSource>();
 
         //nowDay = 22;
         if (voiceDate[nowMonth, nowDay] != null
             && (oldMonth != nowMonth || oldDay != nowDay))
             univoice.PlayOneShot(voiceDate[nowMonth, nowDay]);
-           
+
         //Debug.Log(nowMonth + "월" + nowDay+"일");
 
         //현재 실행한 날짜 기록
@@ -104,11 +105,29 @@ public class DateCheck : MonoBehaviour
 
 
         //소리재생
-       // univoice = GetComponent<AudioSource>();
+        //univoice = GetComponent<AudioSource>();
         //univoice.PlayOneShot(voiceBirthday);
     }
 
-    
+    public static void Date_Check()
+    {
+        //형재 날짜와 시간 얻기
+        now = System.DateTime.Now;
+        nowMonth = now.Month;
+        nowDay = now.Day;
+
+
+        int oldMonth = PlayerPrefs.GetInt("Month");
+        int oldDay = PlayerPrefs.GetInt("Day");
+        Debug.Log("이전 실행일 : " + oldMonth + "월" + oldDay + "일/n"
+            + "현재 실행일 : " + nowMonth + "월" + nowDay + "일");
+
+        PlayerPrefs.SetInt("Month", nowMonth);
+        PlayerPrefs.SetInt("Day", nowDay);
+
+        
+    }
+
     void Update()
     {
         

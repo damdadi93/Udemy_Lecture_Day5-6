@@ -12,12 +12,16 @@ public class Touch : MonoBehaviour
     //모션 스테이트의 ID 얻기
     int motionIdol = Animator.StringToHash("Base Layer.Idol");
 
+    //public DateCheck dateCheck = new DateCheck();
+
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();    
-        univoice = GetComponent<AudioSource>(); 
+        univoice = GetComponent<AudioSource>();
+        //dateCheck = GetComponent<DateCheck>();
+        //dateCheck.Date_Check();
     }
 
     // Update is called once per frame
@@ -51,6 +55,7 @@ public class Touch : MonoBehaviour
             //    univoice.Play();
                 
             //}
+
             if(Physics.Raycast(ray,out hit,100))
             {
                 GameObject hitObj = hit.collider.gameObject;
@@ -61,6 +66,7 @@ public class Touch : MonoBehaviour
                     animator.SetBool("Face_Angry", false);
                     univoice.clip = voice1;
                     univoice.Play();
+                    MsgDisp.ShowMessage("안녕!\n오늘도 힘차게 시작해보자!");
                 }
                 else if (hitObj.tag == "Body")
                 {
@@ -69,6 +75,18 @@ public class Touch : MonoBehaviour
                     animator.SetBool("Face_Angry", true);
                     univoice.clip = voice2;
                     univoice.Play();
+                   
+                    MsgDisp.ShowMessage("안녕!\n오늘도 힘차게 시작해보자!");
+                }
+                else if(hitObj.tag == "Arm")
+                {
+                    Debug.Log("팔");
+                    //string birth;
+                    
+                    MsgDisp.DateMessage(DateCheck.nowMonth,"월",DateCheck.nowDay,"일"); 
+                   
+                    
+                    
                 }
                                    
             }
