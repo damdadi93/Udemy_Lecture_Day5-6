@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Janken : MonoBehaviour
+public class Janken2 : MonoBehaviour
 {
     bool flagJanken = false;        //묵찌빠 시작 플래그
     int modeJanken = 0;
@@ -25,7 +23,6 @@ public class Janken : MonoBehaviour
     const int DRAW = 3;
     const int WIN = 4;
     const int LOOSE = 5;
-    
 
     Animator animator;
     AudioSource univoice;
@@ -37,15 +34,93 @@ public class Janken : MonoBehaviour
 
     float waitDelay;
 
-    public GameObject startBtn;
-    public GameObject jankenBtn;
+    public GUIStyle guiBtnGame;
+    public GUIStyle guiBtnGoo;
+    public GUIStyle guiBtnChoki;
+    public GUIStyle guiBtnPar;
+
+    Rect rtBtnGame = new Rect();
+    Rect rtBtnGoo = new Rect();
+    Rect rtBtnChoki = new Rect();
+    Rect rtBtnPar = new Rect();
+
+
+    private void OnGUI()
+    {
+        // GUI 크기: 16:9의 1280 x 720 해상도 기준
+        const float guiScreen = 1280;
+        const float guiPadding = 10; // 10 픽셀의 간격
+        const float guiButton = 200; // 200x200 픽셀의 버튼들
+        const float guiTop = 720 - guiButton - guiPadding; //버튼 높이
+
+        //현재 화면과의 비율
+        float gui_scale = Screen.width / guiScreen;
+        float scaledPadding = guiPadding * gui_scale;
+        float scaledButton = guiButton * gui_scale;
+        float scaledTop = guiTop * gui_scale;
+
+        // 버튼들 위치 계산
+        rtBtnGame.x = scaledPadding;
+        rtBtnGame.y = scaledTop;
+        rtBtnGame.width = scaledButton;
+        rtBtnGame.height = scaledButton;
+
+        float left = (guiScreen - guiPadding * 2 - guiButton * 3) / 2 * gui_scale;
+        rtBtnGoo.x = left;
+        rtBtnGoo.y = scaledTop;
+        rtBtnGoo.width = scaledButton;
+        rtBtnGoo.height = scaledButton;
+
+        left += scaledButton + scaledPadding;
+        rtBtnChoki.x = left;
+
+        rtBtnChoki.y = scaledTop;
+        rtBtnChoki.width = scaledButton;
+        rtBtnChoki.height = scaledButton;
+
+        left += scaledButton + scaledPadding;
+        rtBtnPar.x = left;
+        rtBtnPar.y = scaledTop;
+        rtBtnPar.width = scaledButton;
+        rtBtnPar.height = scaledButton;
+
+
+        //묵찌빠가 아니면
+        if (!flagJanken)
+        {
+            //UI에 게임버튼 추가
+            flagJanken = (GUI.Button(rtBtnGame, "묵찌빠", guiBtnGame));
+        }
+
+        //묵찌빠 모드
+        if (modeJanken == 1)
+        {
+            //UI에 게임 버튼 추가
+            if (GUI.Button(rtBtnGoo, "묵", guiBtnGoo))
+            {
+                myHand = GOO;
+                modeJanken++;
+            }
+            if (GUI.Button(rtBtnChoki, "찌", guiBtnChoki))
+            {
+                myHand = CHOKI;
+                modeJanken++;
+            }
+            if (GUI.Button(rtBtnPar, "빠", guiBtnPar))
+            {
+                myHand = PAR;
+                modeJanken++;
+            }
+
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         univoice = GetComponent<AudioSource>();
-      
 
         //결과 테이블 미리 결정 [유니티짱,플레이어]
         tableResult[GOO, GOO] = DRAW;
@@ -63,18 +138,16 @@ public class Janken : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log(guiBtnGame);
-        //묵찌빠 상태이면
-        uiActive();
 
+        //묵찌빠 상태이면
         if (flagJanken)
         {
             //게임 모드에 따라
-            switch(modeJanken)
+            switch (modeJanken)
             {
                 case 0: //묵찌빠 시작
-                      UnityChanAction(JANKEN);
-                      modeJanken++;
+                    UnityChanAction(JANKEN);
+                    modeJanken++;
                     break;
 
                 case 1: //플레이어 입력대기
@@ -104,7 +177,7 @@ public class Janken : MonoBehaviour
                 case 3: //결과
                     //약간의 시간 간격
                     waitDelay += Time.deltaTime;
-                    if(waitDelay > 1.5f)
+                    if (waitDelay > 1.5f)
                     {
                         //유니티짱 결과 액션
                         UnityChanAction(flagResult);
@@ -125,7 +198,7 @@ public class Janken : MonoBehaviour
 
     void UnityChanAction(int act) //이벤트 함수
     {
-        switch(act)
+        switch (act)
         {
             case JANKEN:
                 animator.SetBool("Janken", true);
@@ -166,54 +239,7 @@ public class Janken : MonoBehaviour
         univoice.Play();
     }
 
-    public void OnClick()
-    {
-        flagJanken = true;        //묵찌빠 시작 플래그
-        modeJanken = 0;
-       
-    }
-        
-    public void OnGoo()
-    {
-        myHand = GOO;
-        modeJanken++;
-    }
+    
 
-    public void OnChoki()
-    {
-        myHand = CHOKI;
-        modeJanken++;
-    }
-
-    public void OnPar()
-    {
-        myHand = PAR;
-        modeJanken++;
-    }
-
-   public void uiActive()
-   {
-
-        //묵찌빠가 아니면
-        if (!flagJanken)
-        {
-            startBtn.gameObject.SetActive(true);
-           
-        }
-        else
-            startBtn.gameObject.SetActive(false);
-
-        //묵찌빠 모드
-        if (modeJanken == 1)
-        {
-            startBtn.gameObject.SetActive(false);
-            jankenBtn.gameObject.SetActive(true);
-
-        }
-        else
-            jankenBtn.gameObject.SetActive(false);
-
-
-    }
 
 }

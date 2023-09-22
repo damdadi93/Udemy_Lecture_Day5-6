@@ -4,8 +4,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Janken : MonoBehaviour
+
+public class GUI_Janken : MonoBehaviour
 {
+    Button button;
+    GUI gui;
+    Canvas canvas;
+
     bool flagJanken = false;        //묵찌빠 시작 플래그
     int modeJanken = 0;
 
@@ -25,7 +30,6 @@ public class Janken : MonoBehaviour
     const int DRAW = 3;
     const int WIN = 4;
     const int LOOSE = 5;
-    
 
     Animator animator;
     AudioSource univoice;
@@ -37,15 +41,24 @@ public class Janken : MonoBehaviour
 
     float waitDelay;
 
-    public GameObject startBtn;
-    public GameObject jankenBtn;
+    public Button guiBtnGame;
+    public Button guiBtnGoo;
+    public Button guiBtnChoki;
+    public Button guiBtnPar;
 
-    // Start is called before the first frame update
+  
+
     void Start()
     {
+
+        button = GetComponent<Button>();
         animator = GetComponent<Animator>();
         univoice = GetComponent<AudioSource>();
-      
+        guiBtnGame = GetComponent<Button> ();
+        guiBtnGoo= GetComponent<Button> ();
+        guiBtnChoki= GetComponent<Button> ();
+        guiBtnPar= GetComponent<Button> ();
+
 
         //결과 테이블 미리 결정 [유니티짱,플레이어]
         tableResult[GOO, GOO] = DRAW;
@@ -60,21 +73,18 @@ public class Janken : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        // Debug.Log(guiBtnGame);
         //묵찌빠 상태이면
-        uiActive();
-
         if (flagJanken)
         {
             //게임 모드에 따라
-            switch(modeJanken)
+            switch (modeJanken)
             {
                 case 0: //묵찌빠 시작
-                      UnityChanAction(JANKEN);
-                      modeJanken++;
+                    UnityChanAction(JANKEN);
+                    modeJanken++;
                     break;
 
                 case 1: //플레이어 입력대기
@@ -104,7 +114,7 @@ public class Janken : MonoBehaviour
                 case 3: //결과
                     //약간의 시간 간격
                     waitDelay += Time.deltaTime;
-                    if(waitDelay > 1.5f)
+                    if (waitDelay > 1.5f)
                     {
                         //유니티짱 결과 액션
                         UnityChanAction(flagResult);
@@ -123,9 +133,36 @@ public class Janken : MonoBehaviour
         }
     }
 
-    void UnityChanAction(int act) //이벤트 함수
+    public void OnClick()
     {
-        switch(act)
+        Debug.Log("ButtnStart");
+        //janken.set
+
+    }
+    public void OnGUI()
+    {
+        //묵찌빠가 아니면
+        if (!flagJanken)
+        {
+            //UI에 게임버튼 추가
+            OnGame();
+           
+        }
+
+        //묵찌빠 모드
+        if (modeJanken == 1)
+        {
+            //UI에 게임 버튼 추가
+            OnGoo();
+            OnChoki();
+            OnPar();
+           
+
+        }
+    }
+    public void UnityChanAction(int act) //이벤트 함수
+    {
+        switch (act)
         {
             case JANKEN:
                 animator.SetBool("Janken", true);
@@ -166,54 +203,34 @@ public class Janken : MonoBehaviour
         univoice.Play();
     }
 
-    public void OnClick()
+    public void OnGame()
     {
-        flagJanken = true;        //묵찌빠 시작 플래그
-        modeJanken = 0;
-       
+        flagJanken = (guiBtnGame);
     }
-        
+
     public void OnGoo()
     {
-        myHand = GOO;
-        modeJanken++;
+        if (guiBtnGoo)
+        {
+            myHand = GOO;
+            modeJanken++;
+        }
     }
-
     public void OnChoki()
     {
-        myHand = CHOKI;
-        modeJanken++;
+        if (guiBtnChoki)
+        {
+            myHand = CHOKI;
+            modeJanken++;
+        }
     }
-
     public void OnPar()
     {
-        myHand = PAR;
-        modeJanken++;
-    }
 
-   public void uiActive()
-   {
-
-        //묵찌빠가 아니면
-        if (!flagJanken)
+        if (guiBtnPar)
         {
-            startBtn.gameObject.SetActive(true);
-           
+            myHand = PAR;
+            modeJanken++;
         }
-        else
-            startBtn.gameObject.SetActive(false);
-
-        //묵찌빠 모드
-        if (modeJanken == 1)
-        {
-            startBtn.gameObject.SetActive(false);
-            jankenBtn.gameObject.SetActive(true);
-
-        }
-        else
-            jankenBtn.gameObject.SetActive(false);
-
-
     }
-
 }
