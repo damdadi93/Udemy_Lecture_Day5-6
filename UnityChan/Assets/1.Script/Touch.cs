@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Touch : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Touch : MonoBehaviour
     public AudioClip voice2;
     Animator animator;
     AudioSource univoice;
+
+    public New_MsgDisp _msgDisp;
 
     //모션 스테이트의 ID 얻기
     int motionIdol = Animator.StringToHash("Base Layer.Idol");
@@ -58,6 +61,8 @@ public class Touch : MonoBehaviour
 
             if(Physics.Raycast(ray,out hit,100))
             {
+                
+
                 GameObject hitObj = hit.collider.gameObject;
                 if (hitObj.tag == "Head")
                 {
@@ -66,7 +71,7 @@ public class Touch : MonoBehaviour
                     animator.SetBool("Face_Angry", false);
                     univoice.clip = voice1;
                     univoice.Play();
-                    MsgDisp.ShowMessage("안녕!\n오늘도 힘차게 시작해보자!");
+                    _msgDisp.ShowMessage("안녕! \n오늘도 힘차게 시작해보자!");
                 }
                 else if (hitObj.tag == "Body")
                 {
@@ -75,18 +80,21 @@ public class Touch : MonoBehaviour
                     animator.SetBool("Face_Angry", true);
                     univoice.clip = voice2;
                     univoice.Play();
-                   
-                    MsgDisp.ShowMessage("안녕!\n오늘도 힘차게 시작해보자!");
+
+                    _msgDisp.ShowMessage("깍 변태!!");
                 }
                 else if(hitObj.tag == "Arm")
                 {
-                    Debug.Log("팔");
+                    
                     //string birth;
+                    System.DateTime system_Time = System.DateTime.Now;
                     
-                    MsgDisp.DateMessage(DateCheck.nowMonth,"월",DateCheck.nowDay,"일"); 
-                   
-                    
-                    
+                    _msgDisp.ShowMessage("오늘은 " + system_Time.Month + "월 " + system_Time.Day + "일 " + system_Time.Hour + " 시" + system_Time.Minute + "분 입니다.");
+
+
+
+
+
                 }
                                    
             }

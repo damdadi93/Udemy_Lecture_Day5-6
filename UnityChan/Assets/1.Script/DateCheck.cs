@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class DateCheck : MonoBehaviour
 {
-    public static System.DateTime now;
-    public static int nowMonth;
-    public static int nowDay;
+    public  System.DateTime now;
+    public  int nowMonth;
+    public  int nowDay;
+    public int nowHour;
+    public int nowMinute;
 
     private AudioSource univoice;
     public AudioClip voiceBirthday;
@@ -46,13 +48,14 @@ public class DateCheck : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Date_Check();
+        
 
         //형재 날짜와 시간 얻기
         now = System.DateTime.Now;
         nowMonth = now.Month;
         nowDay = now.Day;
-
+        nowHour = now.Hour;
+        nowMinute = now.Minute;
 
         //음성 데이터 정리
         voiceDate[1, 1] = voiceDate0101;
@@ -109,24 +112,7 @@ public class DateCheck : MonoBehaviour
         //univoice.PlayOneShot(voiceBirthday);
     }
 
-    public static void Date_Check()
-    {
-        //형재 날짜와 시간 얻기
-        now = System.DateTime.Now;
-        nowMonth = now.Month;
-        nowDay = now.Day;
-
-
-        int oldMonth = PlayerPrefs.GetInt("Month");
-        int oldDay = PlayerPrefs.GetInt("Day");
-        Debug.Log("이전 실행일 : " + oldMonth + "월" + oldDay + "일/n"
-            + "현재 실행일 : " + nowMonth + "월" + nowDay + "일");
-
-        PlayerPrefs.SetInt("Month", nowMonth);
-        PlayerPrefs.SetInt("Day", nowDay);
-
-        
-    }
+    
 
     void Update()
     {

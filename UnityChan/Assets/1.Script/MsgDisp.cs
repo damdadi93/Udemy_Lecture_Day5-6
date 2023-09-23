@@ -63,8 +63,7 @@ public class MsgDisp : MonoBehaviour
     {
         MsgDisp.msg = msg1;
         MsgDisp.msg = msg2;
-        DateCheck.nowMonth = month;
-        DateCheck.nowDay = day;
+        
         flagDisplay = true;
         msgLen = 0;
         waitDelay = 0;
